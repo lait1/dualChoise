@@ -1,23 +1,23 @@
 package domain
 
 type Category struct {
-	ID      int    `db:"id"`
-	Name    string `db:"name"`
-	Preview string `db:"preview"`
-	Created string `db:"created"`
+	ID      int    `db:"id" json:"id"`
+	Name    string `db:"name" json:"name"`
+	Preview string `db:"preview" json:"preview"`
+	Created string `db:"created" json:"created"`
 }
 
 type Quiz struct {
-	ID      int    `db:"id"`
-	Name    string `db:"name"`
-	Preview string `db:"preview"`
+	ID      int    `db:"id" json:"id"`
+	Name    string `db:"name" json:"name"`
+	Preview string `db:"preview" json:"preview"`
 }
 
 type Option struct {
-	ID       int    `db:"id"`
-	Name     string `db:"name"`
-	Preview  string `db:"preview"`
-	Priority int    `db:"priority"`
+	ID       int    `db:"id" json:"id"`
+	Name     string `db:"name" json:"name"`
+	Preview  string `db:"preview" json:"preview"`
+	Priority int    `db:"priority" json:"priority"`
 }
 
 type Translations struct {
