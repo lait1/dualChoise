@@ -19,9 +19,8 @@ func NewQuizRepository(db *sqlx.DB) *QuizRepository {
 func (r *QuizRepository) GetQuizzesByCategory(categoryID int) ([]*domain.Quiz, error) {
 	var quizzes = make([]*domain.Quiz, 0)
 
-	q := "SELECT q.id, t.ru as name, q.preview " +
+	q := "SELECT q.id, q.name, q.preview " +
 		"FROM `quiz` AS q " +
-		"LEFT JOIN translations as t ON t.var_name = q.name " +
 		"WHERE `category_id` = ?"
 	err := r.db.Select(&quizzes, q, categoryID)
 	if err != nil {
@@ -33,9 +32,8 @@ func (r *QuizRepository) GetQuizzesByCategory(categoryID int) ([]*domain.Quiz, e
 func (r *QuizRepository) GetPopularQuizzes() ([]*domain.Quiz, error) {
 	var quizzes = make([]*domain.Quiz, 0)
 
-	q := "SELECT q.id, t.ru as name, q.preview " +
+	q := "SELECT q.id, q.name, q.preview " +
 		"FROM `quiz` AS q " +
-		"LEFT JOIN translations as t ON t.var_name = q.name " +
 		"LIMIT 4"
 	err := r.db.Select(&quizzes, q)
 	if err != nil {
@@ -47,7 +45,7 @@ func (r *QuizRepository) GetPopularQuizzes() ([]*domain.Quiz, error) {
 func (r *QuizRepository) GetQuiz(ID int) (*domain.Quiz, error) {
 	var quiz domain.Quiz
 
-	q := "SELECT q.id, t.ru as name, q.preview FROM `quiz` AS q LEFT JOIN translations as t ON t.var_name = q.name WHERE q.id = ?"
+	q := "SELECT q.id, q.name, q.preview FROM `quiz` AS q  WHERE q.id = ?"
 	err := r.db.Get(&quiz, q, ID)
 	if err != nil {
 		return nil, fmt.Errorf("get quiz failed: %w", err)
@@ -58,11 +56,10 @@ func (r *QuizRepository) GetQuiz(ID int) (*domain.Quiz, error) {
 func (r *QuizRepository) GetQuizOptions(ID int) ([]*domain.Option, error) {
 	var options = make([]*domain.Option, 0)
 
-	q := "SELECT o.id, t.ru as name, o.preview, o.priority " +
+	q := "SELECT o.id, o.name, o.preview, o.priority " +
 		"FROM `quiz` AS q " +
 		"LEFT JOIN `quiz_options` AS qo ON q.id = qo.quiz_id " +
 		"LEFT JOIN `options` AS o ON o.id = qo.option_id " +
-		"LEFT JOIN `translations` AS t ON t.var_name = o.name " +
 		"WHERE q.id = ? "
 	err := r.db.Select(&options, q, ID)
 	if err != nil {
