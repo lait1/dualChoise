@@ -20,9 +20,17 @@ type Option struct {
 	Priority int    `db:"priority" json:"priority"`
 }
 
+type Lang string
+
 type Translations struct {
 	VarName string `db:"var_name"`
-	En      string `db:"en"`
-	Ru      string `db:"ru"`
-	Es      string `db:"es"`
+	En      Lang   `db:"en"`
+	Ru      Lang   `db:"ru"`
+	Es      Lang   `db:"es"`
 }
+
+const (
+	RU Lang = "ru"
+	EN Lang = "en"
+	ES Lang = "es"
+)

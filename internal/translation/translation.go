@@ -1,6 +1,7 @@
 package translation
 
 import (
+	"dualChoose/internal/domain"
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"net/http"
@@ -21,6 +22,13 @@ func NewTranslationService(r repository) *Service {
 
 func (s *Service) GetTranslations(w http.ResponseWriter, r *http.Request) {
 	local := chi.URLParam(r, "local")
+
+	validLocals := map[domain.Lang]bool{domain.RU: true, domain.EN: true, domain.ES: true}
+	if !validLocals[domain.Lang(local)] {
+		http.Error(w, "Invalid local value", http.StatusBadRequest)
+		return
+	}
+
 	translations, err := s.repository.GetTranslations(local)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
