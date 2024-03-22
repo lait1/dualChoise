@@ -5,6 +5,7 @@ type Category struct {
 	Name    string `db:"name" json:"name"`
 	Preview string `db:"preview" json:"preview"`
 	Created string `db:"created" json:"created"`
+	Quizzes string `db:"quizzes" json:"quizzes"`
 }
 
 type Quiz struct {
