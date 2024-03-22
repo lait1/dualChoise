@@ -31,7 +31,7 @@ func main() {
 	quizRepository := storage.NewQuizRepository(db)
 	translationRepository := storage.NewTranslationRepository(db)
 
-	quizService := quiz.NewQuizService(quizRepository)
+	quizService := quiz.NewQuizService(quizRepository, categoryRepository)
 	categoryService := category.NewCategoryService(categoryRepository)
 	i18n := translation.NewTranslationService(translationRepository)
 

@@ -8,27 +8,28 @@ import (
 	"strconv"
 )
 
-type repository interface {
+type quizRepository interface {
 	GetQuizzesByCategory(categoryID int) ([]*domain.Quiz, error)
 	GetPopularQuizzes() ([]*domain.Quiz, error)
 	GetQuiz(ID int) (*domain.Quiz, error)
 	GetQuizOptions(ID int) ([]*domain.Option, error)
 }
-
+type categoryRepository interface {
+	GetCategory(categoryID int) (*domain.Category, error)
+}
 type Service struct {
-	repository repository
+	quizRepository     quizRepository
+	categoryRepository categoryRepository
 }
 
-func NewQuizService(r repository) *Service {
-	return &Service{
-		repository: r,
-	}
+func NewQuizService(qr quizRepository, cr categoryRepository) *Service {
+	return &Service{qr, cr}
 }
 
-type QuizGame struct {
-	ID      int              `json:"id"`
-	Name    string           `json:"name"`
-	Options []*domain.Option `json:"options"`
+type CategoryInfo struct {
+	ID      int            `json:"categoryId"`
+	Name    string         `json:"categoryName"`
+	Quizzes []*domain.Quiz `json:"quizzes"`
 }
 
 func (s *Service) GetQuizzesByCategory(w http.ResponseWriter, r *http.Request) {
@@ -40,14 +41,24 @@ func (s *Service) GetQuizzesByCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	quizzes, err := s.repository.GetQuizzesByCategory(categoryID)
+	quizzes, err := s.quizRepository.GetQuizzesByCategory(categoryID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
 	}
-
-	resultJson, err := json.Marshal(quizzes)
+	category, err := s.categoryRepository.GetCategory(categoryID)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	categoryInfo := CategoryInfo{
+		ID:      category.ID,
+		Name:    category.Name,
+		Quizzes: quizzes,
+	}
+	resultJson, err := json.Marshal(categoryInfo)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
@@ -59,7 +70,7 @@ func (s *Service) GetQuizzesByCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Service) GetPopularQuizzes(w http.ResponseWriter, r *http.Request) {
-	quizzes, err := s.repository.GetPopularQuizzes()
+	quizzes, err := s.quizRepository.GetPopularQuizzes()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
@@ -77,6 +88,12 @@ func (s *Service) GetPopularQuizzes(w http.ResponseWriter, r *http.Request) {
 	w.Write(resultJson)
 }
 
+type QuizGame struct {
+	ID      int              `json:"id"`
+	Name    string           `json:"name"`
+	Options []*domain.Option `json:"options"`
+}
+
 func (s *Service) StartQuiz(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")
 	quizID, err := strconv.Atoi(idStr)
@@ -86,14 +103,14 @@ func (s *Service) StartQuiz(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	quizInfo, err := s.repository.GetQuiz(quizID)
+	quizInfo, err := s.quizRepository.GetQuiz(quizID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
 	}
 
-	quizOptions, err := s.repository.GetQuizOptions(quizID)
+	quizOptions, err := s.quizRepository.GetQuizOptions(quizID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))

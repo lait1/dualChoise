@@ -8,7 +8,7 @@ import (
 )
 
 type repository interface {
-	GetCategories(limit int) ([]*domain.Category, error)
+	GetCategories(limit int) ([]*domain.CategoryInfo, error)
 }
 type Service struct {
 	repository repository

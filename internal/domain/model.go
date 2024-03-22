@@ -1,11 +1,17 @@
 package domain
 
-type Category struct {
+type CategoryInfo struct {
 	ID      int    `db:"id" json:"id"`
 	Name    string `db:"name" json:"name"`
 	Preview string `db:"preview" json:"preview"`
 	Created string `db:"created" json:"created"`
-	Quizzes string `db:"quizzes" json:"quizzes"`
+	Quizzes int    `db:"quizzes" json:"quizzes"`
+}
+
+type Category struct {
+	ID      int    `db:"id" json:"id"`
+	Name    string `db:"name" json:"name"`
+	Preview string `db:"preview" json:"preview"`
 }
 
 type Quiz struct {
