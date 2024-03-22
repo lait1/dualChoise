@@ -32,9 +32,7 @@ func (r *QuizRepository) GetQuizzesByCategory(categoryID int) ([]*domain.Quiz, e
 func (r *QuizRepository) GetPopularQuizzes() ([]*domain.Quiz, error) {
 	var quizzes = make([]*domain.Quiz, 0)
 
-	q := "SELECT q.id, q.name, q.preview " +
-		"FROM `quiz` AS q " +
-		"LIMIT 4"
+	q := "SELECT q.id, q.name, q.preview FROM `quiz` AS q LEFT JOIN `quiz_options` AS qo ON q.id = qo.quiz_id GROUP BY q.id ORDER BY SUM(qo.wins) desc LIMIT 3;"
 	err := r.db.Select(&quizzes, q)
 	if err != nil {
 		return nil, fmt.Errorf("get popular quizzes failed: %w", err)

@@ -4,10 +4,11 @@ import (
 	"dualChoose/internal/domain"
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
 
 type repository interface {
-	GetCategories() ([]*domain.Category, error)
+	GetCategories(limit int) ([]*domain.Category, error)
 }
 type Service struct {
 	repository repository
@@ -20,7 +21,14 @@ func NewCategoryService(r repository) *Service {
 }
 
 func (s *Service) GetCategories(w http.ResponseWriter, r *http.Request) {
-	categories, err := s.repository.GetCategories()
+	limitStr := r.URL.Query().Get("limit")
+	limit := 0
+
+	if limitStr != "" {
+		limit, _ = strconv.Atoi(limitStr)
+	}
+
+	categories, err := s.repository.GetCategories(limit)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
