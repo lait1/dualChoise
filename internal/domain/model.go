@@ -27,6 +27,11 @@ type Option struct {
 	Priority int    `db:"priority" json:"priority"`
 }
 
+type QuizResult struct {
+	QuizID   int `json:"quiz_id"`
+	OptionID int `json:"option_id"`
+}
+
 type Lang string
 
 type Translations struct {

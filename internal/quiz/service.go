@@ -13,6 +13,7 @@ type quizRepository interface {
 	GetPopularQuizzes() ([]*domain.Quiz, error)
 	GetQuiz(ID int) (*domain.Quiz, error)
 	GetQuizOptions(ID int) ([]*domain.Option, error)
+	SaveResult(result domain.QuizResult) error
 }
 type categoryRepository interface {
 	GetCategory(categoryID int) (*domain.Category, error)
@@ -130,4 +131,21 @@ func (s *Service) StartQuiz(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(resultJson)
+}
+
+func (s *Service) SaveResult(writer http.ResponseWriter, request *http.Request) {
+	var result domain.QuizResult
+	err := json.NewDecoder(request.Body).Decode(&result)
+	if err != nil {
+		writer.WriteHeader(http.StatusBadRequest)
+		writer.Write([]byte(err.Error()))
+		return
+	}
+	err = s.quizRepository.SaveResult(result)
+	if err != nil {
+		writer.WriteHeader(http.StatusBadRequest)
+		writer.Write([]byte(err.Error()))
+		return
+	}
+	writer.WriteHeader(http.StatusOK)
 }

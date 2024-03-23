@@ -50,7 +50,7 @@ func main() {
 		r.Get("/get-quizzes-by-category/{id}", quizService.GetQuizzesByCategory)
 		r.Get("/translations/{local}", i18n.GetTranslations)
 		r.Get("/start-quiz/{id}", quizService.StartQuiz)
-		//r.Post("/send-result", quizService.SaveResult)
+		r.Post("/send-result", quizService.SaveResult)
 	})
 	http.ListenAndServe(":"+strconv.Itoa(cfg.Port), r)
 }

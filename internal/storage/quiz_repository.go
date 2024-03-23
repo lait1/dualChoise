@@ -65,3 +65,12 @@ func (r *QuizRepository) GetQuizOptions(ID int) ([]*domain.Option, error) {
 	}
 	return options, nil
 }
+
+func (r *QuizRepository) SaveResult(result domain.QuizResult) error {
+	q := "UPDATE `quiz_options` SET `wins`= `wins` + 1 WHERE `quiz_id` = ? and `option_id` = ?"
+	_, err := r.db.Exec(q, result.QuizID, result.OptionID)
+	if err != nil {
+		return fmt.Errorf("save result failed: %w", err)
+	}
+	return nil
+}
