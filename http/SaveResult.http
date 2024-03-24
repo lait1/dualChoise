@@ -3,7 +3,7 @@ POST http://localhost:4000/api/send-result
 Content-Type: application/json
 
 {
-  "quiz_id": 1,
-  "option_id": 1
+  "quizId": 9,
+  "optionId": 6
 }
 

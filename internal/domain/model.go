@@ -27,9 +27,20 @@ type Option struct {
 	Priority int    `db:"priority" json:"priority"`
 }
 
+type QuizOption struct {
+	QuizId   int `db:"quiz_id"`
+	OptionId int `db:"option_id"`
+	Wins     int `db:"wins"`
+}
+
 type QuizResult struct {
-	QuizID   int `json:"quiz_id"`
-	OptionID int `json:"option_id"`
+	QuizID   int `json:"quizId"`
+	OptionID int `json:"optionId"`
+}
+
+type QuizGameResult struct {
+	QuizID         int `json:"quizId"`
+	PercentageWins int `json:"percentageWins"`
 }
 
 type Lang string

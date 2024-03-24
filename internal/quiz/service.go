@@ -3,6 +3,7 @@ package quiz
 import (
 	"dualChoose/internal/domain"
 	"encoding/json"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
@@ -12,8 +13,9 @@ type quizRepository interface {
 	GetQuizzesByCategory(categoryID int) ([]*domain.Quiz, error)
 	GetPopularQuizzes() ([]*domain.Quiz, error)
 	GetQuiz(ID int) (*domain.Quiz, error)
-	GetQuizOptions(ID int) ([]*domain.Option, error)
+	GetOptionsByQuizId(ID int) ([]*domain.Option, error)
 	SaveResult(result domain.QuizResult) error
+	GetQuizOptions(quizID int) ([]*domain.QuizOption, error)
 }
 type categoryRepository interface {
 	GetCategory(categoryID int) (*domain.Category, error)
@@ -111,7 +113,7 @@ func (s *Service) StartQuiz(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	quizOptions, err := s.quizRepository.GetQuizOptions(quizID)
+	options, err := s.quizRepository.GetOptionsByQuizId(quizID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
@@ -120,7 +122,7 @@ func (s *Service) StartQuiz(w http.ResponseWriter, r *http.Request) {
 	quiz := QuizGame{
 		ID:      quizInfo.ID,
 		Name:    quizInfo.Name,
-		Options: quizOptions,
+		Options: options,
 	}
 	resultJson, err := json.Marshal(quiz)
 	if err != nil {
@@ -133,19 +135,50 @@ func (s *Service) StartQuiz(w http.ResponseWriter, r *http.Request) {
 	w.Write(resultJson)
 }
 
-func (s *Service) SaveResult(writer http.ResponseWriter, request *http.Request) {
+func (s *Service) SaveResult(w http.ResponseWriter, r *http.Request) {
 	var result domain.QuizResult
-	err := json.NewDecoder(request.Body).Decode(&result)
+	err := json.NewDecoder(r.Body).Decode(&result)
 	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		writer.Write([]byte(err.Error()))
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
 		return
 	}
 	err = s.quizRepository.SaveResult(result)
 	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		writer.Write([]byte(err.Error()))
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
 		return
 	}
-	writer.WriteHeader(http.StatusOK)
+	quizInfo, err := s.quizRepository.GetQuizOptions(result.QuizID)
+
+	quizGameResult := domain.QuizGameResult{
+		QuizID:         result.QuizID,
+		PercentageWins: calculatePercentageWins(result.OptionID, quizInfo),
+	}
+	resultJson, err := json.Marshal(quizGameResult)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(resultJson)
+}
+
+func calculatePercentageWins(resultOptionId int, quizInfo []*domain.QuizOption) int {
+	var totalWins int
+	var resultOptionWins int
+	for _, option := range quizInfo {
+		if option.OptionId == resultOptionId {
+			resultOptionWins = option.Wins
+		}
+		totalWins += option.Wins
+	}
+	fmt.Println(resultOptionWins, totalWins)
+
+	if resultOptionWins == 0 || totalWins == 0 {
+		return 0
+	}
+
+	return int(float32(resultOptionWins) / float32(totalWins) * 100)
 }

@@ -51,7 +51,7 @@ func (r *QuizRepository) GetQuiz(ID int) (*domain.Quiz, error) {
 	return &quiz, nil
 }
 
-func (r *QuizRepository) GetQuizOptions(ID int) ([]*domain.Option, error) {
+func (r *QuizRepository) GetOptionsByQuizId(ID int) ([]*domain.Option, error) {
 	var options = make([]*domain.Option, 0)
 
 	q := "SELECT o.id, o.name, o.preview, o.priority " +
@@ -60,6 +60,19 @@ func (r *QuizRepository) GetQuizOptions(ID int) ([]*domain.Option, error) {
 		"LEFT JOIN `options` AS o ON o.id = qo.option_id " +
 		"WHERE q.id = ? "
 	err := r.db.Select(&options, q, ID)
+	if err != nil {
+		return nil, fmt.Errorf("get options failed: %w", err)
+	}
+	return options, nil
+}
+
+func (r *QuizRepository) GetQuizOptions(quizID int) ([]*domain.QuizOption, error) {
+	var options = make([]*domain.QuizOption, 0)
+
+	q := "SELECT quiz_id, option_id, wins " +
+		"FROM `quiz_options` " +
+		"WHERE quiz_id = ? "
+	err := r.db.Select(&options, q, quizID)
 	if err != nil {
 		return nil, fmt.Errorf("get options failed: %w", err)
 	}
