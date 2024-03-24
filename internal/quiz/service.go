@@ -3,7 +3,6 @@ package quiz
 import (
 	"dualChoose/internal/domain"
 	"encoding/json"
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
@@ -174,7 +173,6 @@ func calculatePercentageWins(resultOptionId int, quizInfo []*domain.QuizOption) 
 		}
 		totalWins += option.Wins
 	}
-	fmt.Println(resultOptionWins, totalWins)
 
 	if resultOptionWins == 0 || totalWins == 0 {
 		return 0
