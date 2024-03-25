@@ -1,10 +1,12 @@
-FROM golang:1.19 AS builder
+FROM golang:1.19
 
-WORKDIR /var/bestChoice
+WORKDIR /app
+
 COPY go.mod go.sum ./
 COPY vendor ./vendor/
-COPY config ./config/
 COPY cmd ./cmd/
 COPY internal ./internal/
 
-RUN CGO_ENABLED=1 GOOS=linux go build -ldflags "-linkmode external -extldflags '-static' -s -w" -o /go/bin/bestChoice ./cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o /bestChoice ./cmd/main.go
+
+CMD ["/bestChoice"]

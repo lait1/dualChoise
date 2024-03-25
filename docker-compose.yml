@@ -10,6 +10,7 @@ services:
     ports:
       - "80:80"
     links:
+      - app
       - nuxt
   nuxt:
     build:
@@ -23,18 +24,18 @@ services:
     container_name: ${PROJECT_NAME}-back
     links:
       - mysql:mysql
-  #  pma:
-  #    image: phpmyadmin/phpmyadmin
-  #    restart: always
-  #    container_name: ${PROJECT_NAME}-pma
-  #    links:
-  #      - mysql:mysql
-  #    ports:
-  #      - "8003:80"
-  #    environment:
-  #      - "PMA_HOST=mysql"
-  #      - "MYSQL_USER=${MYSQL_USER}"
-  #      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+  pma:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    container_name: ${PROJECT_NAME}-pma
+    links:
+      - mysql:mysql
+    ports:
+      - "8003:80"
+    environment:
+      - "PMA_HOST=mysql"
+      - "MYSQL_USER=${MYSQL_USER}"
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
   mysql:
     image: mysql:8.0
     ports:
