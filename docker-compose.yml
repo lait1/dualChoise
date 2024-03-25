@@ -8,7 +8,7 @@ services:
       - ./logs:/var/log/nginx
     container_name: ${PROJECT_NAME}-nginx
     ports:
-      - "8080:80"
+      - "80:80"
     links:
       - nuxt
   nuxt:
@@ -17,18 +17,24 @@ services:
     expose:
       - "3000"
     container_name: ${PROJECT_NAME}-nuxt
-  pma:
-    image: phpmyadmin/phpmyadmin
-    restart: always
-    container_name: ${PROJECT_NAME}-pma
+  app:
+    build:
+      context: .
+    container_name: ${PROJECT_NAME}-back
     links:
       - mysql:mysql
-    ports:
-      - "8003:80"
-    environment:
-      - "PMA_HOST=mysql"
-      - "MYSQL_USER=${MYSQL_USER}"
-      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+  #  pma:
+  #    image: phpmyadmin/phpmyadmin
+  #    restart: always
+  #    container_name: ${PROJECT_NAME}-pma
+  #    links:
+  #      - mysql:mysql
+  #    ports:
+  #      - "8003:80"
+  #    environment:
+  #      - "PMA_HOST=mysql"
+  #      - "MYSQL_USER=${MYSQL_USER}"
+  #      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
   mysql:
     image: mysql:8.0
     ports:
