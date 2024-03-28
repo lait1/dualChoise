@@ -29,6 +29,8 @@ services:
       - mysql:mysql
     environment:
       - "MYSQL_DATABASE=${MYSQL_DATABASE}"
+      - "MYSQL_USER=${MYSQL_USER}"
+      - "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
   pma:
     image: phpmyadmin/phpmyadmin
     restart: always
