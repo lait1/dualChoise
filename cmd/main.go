@@ -20,7 +20,7 @@ func main() {
 	db, err := common.SetDataBaseMySQL(logger, cfg)
 	if err != nil {
 		logger.Fatal("cannot connect to MySQL", zap.Error(err),
-			zap.String("connect", common.SafeMysqlCreds(cfg.MySQLConnect)))
+			zap.String("db", cfg.MySQLDatabase))
 	}
 
 	defer func() {

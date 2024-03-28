@@ -9,8 +9,10 @@ import (
 
 // MySQL connect
 func SetDataBaseMySQL(logger *zap.Logger, cfg *config.Config) (db *sqlx.DB, err error) {
-	logger.Info("MySQL connect", zap.String("connect", SafeMysqlCreds(cfg.MySQLConnect)))
-	db, err = sqlx.Open("mysql", cfg.MySQLConnect)
+	connection := cfg.MySQLUser + ":" + cfg.MySQLPassword + "@tcp(mysql:3306)/" + cfg.MySQLDatabase + "?parseTime=true"
+	logger.Info(connection)
+	logger.Info("MySQL connect", zap.String("connect", SafeMysqlCreds(connection)))
+	db, err = sqlx.Open("mysql", connection)
 	if err != nil {
 		return
 	}
