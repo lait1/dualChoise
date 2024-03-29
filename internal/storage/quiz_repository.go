@@ -29,10 +29,13 @@ func (r *QuizRepository) GetQuizzesByCategory(categoryID int) ([]*domain.Quiz, e
 	return quizzes, nil
 }
 
-func (r *QuizRepository) GetPopularQuizzes() ([]*domain.Quiz, error) {
+func (r *QuizRepository) GetPopularQuizzes(limit int) ([]*domain.Quiz, error) {
 	var quizzes = make([]*domain.Quiz, 0)
 
-	q := "SELECT q.id, q.name, q.preview FROM `quiz` AS q LEFT JOIN `quiz_options` AS qo ON q.id = qo.quiz_id GROUP BY q.id ORDER BY SUM(qo.wins) desc LIMIT 3;"
+	q := "SELECT q.id, q.name, q.preview FROM `quiz` AS q LEFT JOIN `quiz_options` AS qo ON q.id = qo.quiz_id GROUP BY q.id ORDER BY SUM(qo.wins) desc "
+	if limit > 0 {
+		q += fmt.Sprintf(" LIMIT %d", limit)
+	}
 	err := r.db.Select(&quizzes, q)
 	if err != nil {
 		return nil, fmt.Errorf("get popular quizzes failed: %w", err)

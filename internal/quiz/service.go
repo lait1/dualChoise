@@ -10,7 +10,7 @@ import (
 
 type quizRepository interface {
 	GetQuizzesByCategory(categoryID int) ([]*domain.Quiz, error)
-	GetPopularQuizzes() ([]*domain.Quiz, error)
+	GetPopularQuizzes(limit int) ([]*domain.Quiz, error)
 	GetQuiz(ID int) (*domain.Quiz, error)
 	GetOptionsByQuizId(ID int) ([]*domain.Option, error)
 	SaveResult(result domain.QuizResult) error
@@ -72,7 +72,12 @@ func (s *Service) GetQuizzesByCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Service) GetPopularQuizzes(w http.ResponseWriter, r *http.Request) {
-	quizzes, err := s.quizRepository.GetPopularQuizzes()
+	limitStr := r.URL.Query().Get("limit")
+	limit := 3
+	if limitStr != "" {
+		limit, _ = strconv.Atoi(limitStr)
+	}
+	quizzes, err := s.quizRepository.GetPopularQuizzes(limit)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
