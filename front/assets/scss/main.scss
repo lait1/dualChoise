@@ -1,0 +1,75 @@
+@import 'fonts.scss';
+
+html {
+  font-family: 'Manrope', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--Content-Primary);
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--Background-Primary);
+}
+#__nuxt {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+h1 {
+  font-family: "SF Pro Rounded", sans-serif;
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 76px;
+  margin: 0;
+}
+h2{
+  font-family: "SF Pro Rounded", sans-serif;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 40px;
+  margin: 0;
+}
+h3{
+  font-family: Manrope, sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  margin: 0;
+}
+.wrap{
+  max-width: 1184px;
+  width: 100%;
+  padding: 72px 24px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 40px;
+    line-height: 48px;
+  }
+  h2{
+    font-size: 24px;
+    line-height: 30px;
+  }
+  h3{
+    font-size: 16px;
+    line-height: 22px;
+  }
+  .wrap{
+    padding: 52px 24px;
+  }
+}
+
+@media (max-width: 375px) {
+  .wrap{
+    padding: 40px 24px;
+  }
+}
