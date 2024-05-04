@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {IQuizResults, IQuizGame} from "@/types/quiz.type";
+import type {IQuizResults, IQuizGame } from "@/types/quiz.type";
 const { t } = useI18n()
 const { params } = useRoute()
 
@@ -9,14 +9,14 @@ useHead({
 
 const info = ref<IQuizGame>(null)
 const titleBanner = ref<string>(t('content.main.bannerQuiz'))
-const { data } = await useAPIFetch<IQuizGame>(`/api/start-quiz/${params.id}`)
+const { data } = await useServerFetch<IQuizGame>(`/api/start-quiz/${params.id}`)
+info.value = data.value
 
-//todo почему данные приходят в виде стринги?
 const onChangeBannerTitle = (event: IQuizResults) => {
     const userObject = JSON.parse(event);
     titleBanner.value = t('content.main.bannerGame', { count: userObject.percentageWins })
 }
-info.value = data.value
+
 </script>
 <template>
     <MainBanner

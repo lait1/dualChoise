@@ -9,7 +9,7 @@ useHead({
 })
 const imageSize = isDesktop ? 200 : 250
 const info = ref<ICategory>(null)
-const { data } = await useAPIFetch<IQuiz[]>(`/api/get-quizzes-by-category/${params.id}`)
+const { data } = await useServerFetch<IQuiz[]>(`/api/get-quizzes-by-category/${params.id}`)
 
 info.value = data.value
 </script>
@@ -25,7 +25,7 @@ info.value = data.value
                  :quiz="quiz"
                  :size="imageSize"
                  @click="navigateTo(
-                  `/start-quiz/${quiz.id}`
+                  `/start-quiz/${quiz.id}`,{ external: true }
                     )"
                 />
             </div>

@@ -7,7 +7,7 @@ const { t } = useI18n()
 // const limit = isDesktop ? 9 : 6
 const limit = 6
 const categories = ref<ICategoryInfo[]>([])
-const { data } = await useAPIFetch<IQuiz[]>("/api/get-categories", { query: { limit: limit } })
+const { data, error } = await useServerFetch<IQuiz[]>("/api/get-categories", { query: { limit: limit } })
 categories.value = data.value
 </script>
 
@@ -19,7 +19,7 @@ categories.value = data.value
             <div class="popular-categories__control">
               <ActionButton
                       text="View all categories"
-                      @click="navigateTo('/categories')"
+                      @click="navigateTo('/categories',{ external: true })"
               >
                   <template #icon>
                     <ArrowRight class="svg"/>

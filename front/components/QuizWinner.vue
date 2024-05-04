@@ -21,7 +21,7 @@ const imageSize = isDesktop ? 200 : 250
      />
      <ActionButton
          text="To the main page"
-         @click="navigateTo('/')"
+         @click="navigateTo('/', { external: true })"
      />
     </div>
 </template>

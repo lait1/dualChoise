@@ -36,7 +36,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseUrl: process.env.NUXT_MAIN_DOMAIN,
-      port: process.env.NUXT_BACKEND_PORT || 80,
+      serverUrl: process.env.NUXT_SERVER_DOMAIN,
     }
   },
 })

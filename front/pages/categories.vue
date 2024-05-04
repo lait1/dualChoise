@@ -8,7 +8,7 @@ useHead({
     title: 'YOUR Best categories'
 })
 const categories = ref<ICategoryInfo[]>([])
-const { data } = await useAPIFetch<IQuiz[]>("/api/get-categories")
+const { data } = await useServerFetch<IQuiz[]>("/api/get-categories")
 
 categories.value = data.value
 </script>

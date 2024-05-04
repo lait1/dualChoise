@@ -14,7 +14,7 @@ services:
       - nuxt
   nuxt:
     build:
-      context: ./frontend
+      context: ./front
       args:
         - MAIN_DOMAIN=${NUXT_MAIN_DOMAIN}
     expose:

@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<{
          :key="category.id"
          :category="category"
          @click="navigateTo(
-          `/category/${category.id}`
+          `/category/${category.id}`,{ external: true }
         )"
         />
     </div>

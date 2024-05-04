@@ -13,7 +13,7 @@ const {t} = useI18n()
 const limit = 4
 const imageSize = isDesktop ? 200 : 250
 const tipQuizzes = ref<IQuiz[]>([])
-const {data, pending} = await useAPIFetch<IQuiz[]>("/api/get-popular-quizzes", { query: { limit: limit } })
+const {data, pending, error} = await useServerFetch<IQuiz[]>("/api/get-popular-quizzes", { query: { limit: limit } })
 tipQuizzes.value = data.value
 </script>
 
@@ -30,7 +30,7 @@ tipQuizzes.value = data.value
                     :quiz="quiz"
                     :size="imageSize"
                     @click="navigateTo(
-                  `/start-quiz/${quiz.id}`
+                  `/start-quiz/${quiz.id}`,{ external: true }
                     )"
                 />
             </div>
