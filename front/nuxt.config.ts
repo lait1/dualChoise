@@ -36,7 +36,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseUrl: process.env.NUXT_MAIN_DOMAIN,
-      serverUrl: process.env.NUXT_SERVER_DOMAIN,
+      serverUrl: process.env.NUXT_SERVER_DOMAIN || 'http://app:4000',
     }
   },
 })

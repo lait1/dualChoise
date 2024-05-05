@@ -1,6 +1,8 @@
 type useFetchType = typeof useFetch
 
 export const useServerFetch: useFetchType = (path, options = {}) => {
-  options.baseURL = `http://app:4000`;
+  const config = useRuntimeConfig()
+
+  options.baseURL = `${config.public.serverUrl}`;
   return useFetch(path, options)
 }
