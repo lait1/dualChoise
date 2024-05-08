@@ -26,7 +26,7 @@ const imageSize = isDesktop ? 200 : 250
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .quiz-winner__container {
     display: flex;
     flex-direction: column;
@@ -35,7 +35,6 @@ const imageSize = isDesktop ? 200 : 250
     padding-top: 0;
 }
 .quiz-winner{
-    width: 100%;
     &:hover{
         border: 1px solid transparent;
         box-shadow: none;
