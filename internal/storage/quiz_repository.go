@@ -4,6 +4,8 @@ import (
 	"dualChoose/internal/domain"
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"math/rand"
+	"time"
 )
 
 type QuizRepository struct {
@@ -66,7 +68,20 @@ func (r *QuizRepository) GetOptionsByQuizId(ID int) ([]*domain.Option, error) {
 	if err != nil {
 		return nil, fmt.Errorf("get options failed: %w", err)
 	}
-	return options, nil
+
+	// Shuffle options
+	randSource := rand.New(rand.NewSource(time.Now().UnixNano()))
+	randSource.Shuffle(len(options), func(i, j int) {
+		options[i], options[j] = options[j], options[i]
+	})
+
+	// Return the first 10 options, or all if less than 10
+	numOptions := 100
+	if len(options) < numOptions {
+		numOptions = len(options)
+	}
+
+	return options[:numOptions], nil
 }
 
 func (r *QuizRepository) GetQuizOptions(quizID int) ([]*domain.QuizOption, error) {

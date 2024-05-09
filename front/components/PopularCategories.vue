@@ -15,7 +15,7 @@ categories.value = data.value
     <section class="popular-categories">
         <div class="wrap">
           <Header :text="t('content.main.categories')" />
-          <Categories :categories="categories" />
+          <Categories v-if="categories.length > 0" :categories="categories" />
             <div class="popular-categories__control">
               <ActionButton
                       text="View all categories"

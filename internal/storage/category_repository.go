@@ -19,7 +19,7 @@ func NewCategoryRepository(db *sqlx.DB) *CategoryRepository {
 func (r *CategoryRepository) GetCategories(limit int) ([]*domain.CategoryInfo, error) {
 	var categories = make([]*domain.CategoryInfo, 0)
 
-	q := "SELECT c.id, c.name, c.preview, c.created, count(q.id) as quizzes FROM `categories` AS c LEFT JOIN quiz AS q ON q.category_id = c.id GROUP BY c.id ORDER by quizzes DESC"
+	q := "SELECT c.id, c.name, c.preview, c.created, count(q.id) as quizzes FROM `categories` AS c LEFT JOIN quiz AS q ON q.category_id = c.id GROUP BY c.id HAVING quizzes > 0 ORDER by quizzes DESC"
 	if limit > 0 {
 		q += fmt.Sprintf(" LIMIT %d", limit)
 	}
