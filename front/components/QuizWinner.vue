@@ -26,7 +26,7 @@ const imageSize = isDesktop ? 200 : 250
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .quiz-winner__container {
     display: flex;
     flex-direction: column;
