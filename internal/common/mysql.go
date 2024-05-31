@@ -9,7 +9,7 @@ import (
 
 // MySQL connect
 func SetDataBaseMySQL(logger *zap.Logger, cfg *config.Config) (db *sqlx.DB, err error) {
-	connection := cfg.MySQLUser + ":" + cfg.MySQLPassword + "@tcp(mysql:3306)/" + cfg.MySQLDatabase + "?parseTime=true"
+	connection := cfg.MySQLUser + ":" + cfg.MySQLPassword + "@tcp(localhost:3306)/" + cfg.MySQLDatabase + "?parseTime=true"
 	//connection := "root:district13@tcp(10.52.1.60:3306)/best_option?parseTime=true"
 	logger.Info(connection)
 	logger.Info("MySQL connect", zap.String("connect", SafeMysqlCreds(connection)))
